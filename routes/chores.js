@@ -5,31 +5,35 @@ const slackToken = process.env.SLACK_TOKEN;
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
-	let users = [];
-	getUsers().then(response => {
-		let userResponse = JSON.parse(response);
-		console.log(userResponse);
-		for (var key in userResponse) {
-			if (userResponse.hasOwnProperty(key)) {
-				if (key === 'members') {
-					userResponse[key].forEach(user => {
-						if (user.is_bot === false && user.name !== 'slackbot') {
-							users.push(user.name);
-							console.log(user);
-						}
-					});
+	console.log(req.body.token);
+	if (req.body.token === process.env.SLACK_VERIFICATION_TOKEN) {
+		let users = [];
+		getUsers().then(response => {
+			let userResponse = JSON.parse(response);
+			for (var key in userResponse) {
+				if (userResponse.hasOwnProperty(key)) {
+					if (key === 'members') {
+						userResponse[key].forEach(user => {
+							if (user.is_bot === false && user.name !== 'slackbot') {
+								users.push(user.name);
+							}
+						});
+					}
 				}
 			}
-		}
-		console.log(users);
-		var shuffledUsers = shuffleNames(users);
-		var choreString = distributeChores(shuffledUsers);
+			var shuffledUsers = shuffleNames(users);
+			var choreString = distributeChores(shuffledUsers);
+			var responseObject = {
+				response_type: 'in_channel',
+				text: choreString
+			};
+			res.send(responseObject);
+		});
+	} else {
 		var responseObject = {
-			response_type: 'in_channel',
-			text: choreString
+			text: 'Invalid verifcation token'
 		};
-		res.send(responseObject);
-	});
+	}
 });
 
 function getUsers() {
