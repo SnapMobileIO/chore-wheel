@@ -8,6 +8,7 @@ router.post('/', function(req, res, next) {
 	let users = [];
 	getUsers().then(response => {
 		let userResponse = JSON.parse(response);
+		console.log(userResponse);
 		for (var key in userResponse) {
 			if (userResponse.hasOwnProperty(key)) {
 				if (key === 'members') {
