@@ -5,7 +5,6 @@ const slackToken = process.env.SLACK_TOKEN;
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
-	console.log(req.body.token);
 	if (req.body.token === process.env.SLACK_VERIFICATION_TOKEN) {
 		let users = [];
 		getUsers().then(response => {
