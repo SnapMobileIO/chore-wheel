@@ -14,11 +14,13 @@ router.post('/', function(req, res, next) {
 					userResponse[key].forEach(user => {
 						if (user.is_bot === false && user.name !== 'slackbot') {
 							users.push(user.name);
+							console.log(user);
 						}
 					});
 				}
 			}
 		}
+		console.log(users);
 		var shuffledUsers = shuffleNames(users);
 		var choreString = distributeChores(shuffledUsers);
 		var responseObject = {
