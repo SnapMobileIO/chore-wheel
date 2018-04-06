@@ -1,11 +1,39 @@
 var express = require('express');
 var router = express.Router();
+const request = require('request');
+const slackToken = process.env.SLACK_TOKEN;
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.post('/', function(req, res, next) {
+	let users;
+	getUsers().then(response => {
+		users = response;
+		console.log('users', users);
+	});
 	var choreString = distributeChores(shuffleNames());
-	res.send(choreString);
+	var responseObject = {
+		response_type: 'in_channel',
+		text: choreString
+	};
+	res.send(responseObject);
 });
+
+function getUsers() {
+	const requestURL = `https://slack.com/api/users.list?token=${slackToken}&pretty=1`;
+	return new Promise((resolve, reject) => {
+		request.get(queryURL, (error, response, body) => {
+			if (error) {
+				reject(error);
+			}
+
+			if (!error && response.statusCode === 200) {
+				resolve(body);
+			} else {
+				reject(new Error(body));
+			}
+		});
+	});
+}
 
 function shuffleNames() {
 	var people = [
