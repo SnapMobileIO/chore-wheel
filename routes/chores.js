@@ -5,23 +5,34 @@ const slackToken = process.env.SLACK_TOKEN;
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
-	let users;
+	let users = [];
 	getUsers().then(response => {
-		users = response;
-		console.log('users', users);
+		let userResponse = JSON.parse(response);
+		for (var key in userResponse) {
+			if (userResponse.hasOwnProperty(key)) {
+				if (key === 'members') {
+					userResponse[key].forEach(user => {
+						if (user.is_bot === false && user.name !== 'slackbot') {
+							users.push(user.name);
+						}
+					});
+				}
+			}
+		}
+		var shuffledUsers = shuffleNames(users);
+		var choreString = distributeChores(shuffledUsers);
+		var responseObject = {
+			response_type: 'in_channel',
+			text: choreString
+		};
+		res.send(responseObject);
 	});
-	var choreString = distributeChores(shuffleNames());
-	var responseObject = {
-		response_type: 'in_channel',
-		text: choreString
-	};
-	res.send(responseObject);
 });
 
 function getUsers() {
 	const requestURL = `https://slack.com/api/users.list?token=${slackToken}&pretty=1`;
 	return new Promise((resolve, reject) => {
-		request.get(queryURL, (error, response, body) => {
+		request.get(requestURL, (error, response, body) => {
 			if (error) {
 				reject(error);
 			}
@@ -35,28 +46,9 @@ function getUsers() {
 	});
 }
 
-function shuffleNames() {
-	var people = [
-		'Alaina',
-		'Andrea',
-		'Avner',
-		'Andy',
-		'Brandon',
-		'Duke',
-		'Joe',
-		'Drew',
-		'Paul',
-		'Melissa',
-		'Zofia',
-		'Kelly',
-		'Liz',
-		'Dave',
-		'Gina',
-		'Ryan',
-		'Gabe',
-		'Catie'
-	];
-	var currentIndex = people.length,
+function shuffleNames(users) {
+	let shuffledUsers = users;
+	var currentIndex = shuffledUsers.length,
 		temporaryValue,
 		randomIndex;
 
@@ -64,12 +56,12 @@ function shuffleNames() {
 		randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex -= 1;
 
-		temporaryValue = people[currentIndex];
-		people[currentIndex] = people[randomIndex];
-		people[randomIndex] = temporaryValue;
+		temporaryValue = shuffledUsers[currentIndex];
+		shuffledUsers[currentIndex] = shuffledUsers[randomIndex];
+		shuffledUsers[randomIndex] = temporaryValue;
 	}
 
-	return people;
+	return shuffledUsers;
 }
 
 function distributeChores(nameArray) {
