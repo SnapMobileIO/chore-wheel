@@ -27,7 +27,7 @@ router.post('/', function(req, res, next) {
 					if (key === 'members') {
 						userResponse[key].forEach(user => {
 							if (user.is_bot === false && inactiveUsers.indexOf(user.name) > -1) {
-								users.push(user.name);
+								users.push(`@${user.name}`);
 							}
 						});
 					}
