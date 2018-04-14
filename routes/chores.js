@@ -2,6 +2,19 @@ var express = require('express');
 var router = express.Router();
 const request = require('request');
 const slackToken = process.env.SLACK_TOKEN;
+const inactiveUsers = [
+	'slackbot',
+	'anya',
+	'jack',
+	'sam',
+	'laf',
+	'angelavitzthum',
+	'mallory.halley',
+	'zach',
+	'noahberkson',
+	'kyle',
+	'julia.shao'
+];
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
@@ -13,7 +26,7 @@ router.post('/', function(req, res, next) {
 				if (userResponse.hasOwnProperty(key)) {
 					if (key === 'members') {
 						userResponse[key].forEach(user => {
-							if (user.is_bot === false && user.name !== 'slackbot') {
+							if (user.is_bot === false && inactiveUsers.indexOf(user.name) > -1) {
 								users.push(user.name);
 							}
 						});
