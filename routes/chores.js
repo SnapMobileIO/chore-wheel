@@ -13,7 +13,8 @@ const inactiveUsers = [
 	'zach',
 	'noahberkson',
 	'kyle',
-	'julia.shao'
+	'julia.shao',
+	'kelly.graver'
 ];
 
 /* GET users listing. */
@@ -26,7 +27,7 @@ router.post('/', function(req, res, next) {
 				if (userResponse.hasOwnProperty(key)) {
 					if (key === 'members') {
 						userResponse[key].forEach(user => {
-							if (user.is_bot === false && inactiveUsers.indexOf(user.name) > -1) {
+							if (user.is_bot === false && inactiveUsers.indexOf(user.name) < 0) {
 								users.push(`@${user.name}`);
 							}
 						});
