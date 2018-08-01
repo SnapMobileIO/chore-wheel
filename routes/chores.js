@@ -86,7 +86,7 @@ function shuffleNames(users) {
 
 function distributeChores(nameArray) {
 	var str = '';
-	var chores = ['Kitchen Counters', 'Refrigerator', 'Dishes'];
+	var chores = ['Kitchen Counters', 'Refrigerator', 'Dishes', 'Trash/Recycle'];
 	var peoplePerChore = Math.ceil(nameArray.length / chores.length);
 
 	var startIndex = 0;
