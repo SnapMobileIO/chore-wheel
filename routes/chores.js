@@ -14,7 +14,15 @@ const inactiveUsers = [
 	'noahberkson',
 	'kyle',
 	'julia.shao',
-	'kelly.graver'
+	'kelly.graver',
+	'cody.horchak',
+	'mike',
+	'amrinder.singh',
+	'gabe',
+	'avner',
+	'mo',
+	'alaina',
+	'andrea'
 ];
 
 /* GET users listing. */
