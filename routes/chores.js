@@ -3,6 +3,7 @@ var router = express.Router();
 const request = require('request');
 const slackToken = process.env.SLACK_TOKEN;
 const inactiveUsers = process.env.INACTIVE_USERS
+const choreList = process.env.CHORES
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
@@ -74,7 +75,7 @@ function shuffleNames(users) {
 
 function distributeChores(nameArray) {
 	var str = '';
-	var chores = ['Kitchen Counters', 'Refrigerator', 'Dishes', 'Trash/Recycle'];
+	var chores = choreList.split(',');
 	var peoplePerChore = Math.ceil(nameArray.length / chores.length);
 
 	var startIndex = 0;
